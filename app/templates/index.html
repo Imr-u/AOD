@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Ethiopian Data Hub — Browse Datasets{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1>African Open Datasets</h1>
+        <p class="hero-sub">Structured data collected from official sources — free to download.</p>
+        <span class="dataset-count">{{ datasets|length }} datasets available</span>
+    </div>
+</section>
+
+<section class="catalog">
+    <div class="container">
+        <div class="card-grid">
+            {% for dataset in datasets %}
+            <a href="/datasets/{{ dataset.id }}" class="dataset-card">
+                <div class="card-top">
+                    <span class="file-badge {{ dataset.file_type|lower }}">{{ dataset.file_type }}</span>
+                    <span class="card-source">{{ dataset.source }}</span>
+                </div>
+                <h2 class="card-title">{{ dataset.name }}</h2>
+                <p class="card-desc">{{ dataset.description }}</p>
+                <div class="card-meta">
+                    <span>{{ "{:,}".format(dataset.row_count) if dataset.row_count else "—" }} rows</span>
+                    <span>{{ dataset.file_size_kb }} KB</span>
+                    <span>Updated {{ dataset.last_updated }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ dataset.name }} — Ethiopian Data Hub{% endblock %}
+
+{% block content %}
+<section class="detail-hero">
+    <div class="container">
+        <a href="/" class="back-link">← All Datasets</a>
+        <div class="detail-header">
+            <span class="file-badge {{ dataset.file_type|lower }}">{{ dataset.file_type }}</span>
+            <h1>{{ dataset.name }}</h1>
+            <p class="detail-source">{{ dataset.source }}</p>
+        </div>
+        <p class="detail-desc">{{ dataset.description }}</p>
+        <div class="detail-meta">
+            <div class="meta-item">
+                <span class="meta-label">Rows</span>
+                <span class="meta-value">{{ "{:,}".format(dataset.row_count) if dataset.row_count else "—" }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">File Size</span>
+                <span class="meta-value">{{ dataset.file_size_kb }} KB</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Format</span>
+                <span class="meta-value">{{ dataset.file_type }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Last Updated</span>
+                <span class="meta-value">{{ dataset.last_updated }}</span>
+            </div>
+        </div>
+        <a href="/datasets/{{ dataset.id }}/download" class="download-btn">
+            ↓ Download {{ dataset.file_type }}
+        </a>
+    </div>
+</section>
+
+{% if dataset.file_type == "CSV" and dataset.preview %}
+<section class="preview">
+    <div class="container">
+        <h2>Preview <span>(first 10 rows)</span></h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in dataset.preview.columns %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in dataset.preview.rows %}
+                    <tr>
+                        {% for cell in row %}
+                        <td>{{ cell if cell is not none else "—" }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
