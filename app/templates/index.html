@@ -1,20 +1,63 @@
 {% extends "base.html" %}
-{% block title %}AOD - Browse Datasets{% endblock %}
+{% block title %}African Open Datasets — Browse Datasets{% endblock %}
 
 {% block content %}
 <section class="hero">
     <div class="container">
         <h1>African Open Datasets</h1>
-        <p class="hero-sub">Structured data collected from official sources — free to download.</p>
-        <span class="dataset-count">{{ datasets|length }} datasets available</span>
+        <p class="hero-sub">Structured African data, free to download.</p>
+        <span class="dataset-count" id="dataset-count">{{ datasets|length }} datasets available</span>
+    </div>
+</section>
+
+<section class="filters">
+    <div class="container">
+
+        <!-- Category filters -->
+        <div class="filter-group">
+            <span class="filter-label">Category</span>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+                <button class="filter-btn" data-filter="category" data-value="Finance">Finance</button>
+                <button class="filter-btn" data-filter="category" data-value="Jobs">Jobs</button>
+            </div>
+        </div>
+
+        <!-- File type filters -->
+        <div class="filter-group">
+            <span class="filter-label">File Type</span>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="filetype" data-value="all">All</button>
+                <button class="filter-btn" data-filter="filetype" data-value="CSV">CSV</button>
+                <button class="filter-btn" data-filter="filetype" data-value="PARQUET">Parquet</button>
+                <button class="filter-btn" data-filter="filetype" data-value="JSONL">JSONL</button>
+            </div>
+        </div>
+
+        <!-- Country dropdown -->
+        <div class="filter-group">
+            <span class="filter-label">Country</span>
+            <select class="filter-select" id="country-filter">
+                <option value="all">All Countries</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Egypt">Egypt</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Nigeria">Nigeria</option>
+            </select>
+        </div>
+
     </div>
 </section>
 
 <section class="catalog">
     <div class="container">
-        <div class="card-grid">
+        <div class="card-grid" id="card-grid">
             {% for dataset in datasets %}
-            <a href="/datasets/{{ dataset.id }}" class="dataset-card">
+            <a href="/datasets/{{ dataset.id }}" class="dataset-card"
+                data-category="{{ dataset.category }}"
+                data-filetype="{{ dataset.file_type }}"
+                data-country="{{ dataset.country }}">
                 <div class="card-top">
                     <span class="file-badge {{ dataset.file_type|lower }}">{{ dataset.file_type }}</span>
                     <span class="card-source">{{ dataset.source }}</span>
@@ -29,6 +72,94 @@
             </a>
             {% endfor %}
         </div>
+
+        <p class="no-results" id="no-results" style="display:none;">
+            No datasets match your filters.
+        </p>
     </div>
 </section>
+
+<script>
+    const activeFilters = { category: "all", filetype: "all", country: "all" };
+
+    function applyFilters() {
+        const cards = document.querySelectorAll(".dataset-card");
+        let visible = 0;
+
+        cards.forEach(card => {
+            const matchCategory = activeFilters.category === "all" || card.dataset.category === activeFilters.category;
+            const matchFiletype = activeFilters.filetype === "all" || card.dataset.filetype === activeFilters.filetype;
+            const matchCountry = activeFilters.country === "all" || card.dataset.country === activeFilters.country;
+
+            if (matchCategory && matchFiletype && matchCountry) {
+                card.style.display = "flex";
+                visible++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        document.getElementById("dataset-count").textContent = `${visible} datasets available`;
+        document.getElementById("no-results").style.display = visible === 0 ? "block" : "none";
+    }
+
+    // Category + filetype buttons
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const filterType = btn.dataset.filter;
+            document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            activeFilters[filterType] = btn.dataset.value;
+            applyFilters();
+        });
+    });
+
+    // Country dropdown
+    document.getElementById("country-filter").addEventListener("change", e => {
+        activeFilters.country = e.target.value;
+        applyFilters();
+    });
+</script>
+
+<!-- Suggest a Dataset Form -->
+<section class="suggest">
+    <div class="container">
+        <div class="suggest-inner">
+            <div class="suggest-text">
+                <h2>Missing a dataset?</h2>
+                <p>Tell us what data you need and we'll work on adding it to AOD.</p>
+            </div>
+            <form action="https://formsubmit.co/imruabubeker@gmail.com" method="POST" class="suggest-form">
+                <!-- Formsubmit config -->
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="AOD — New Dataset Suggestion">
+                <input type="hidden" name="_next" value="https://web-production-276ac.up.railway.app/?suggested=true">
+
+                <div class="form-row">
+                    <input
+                        type="text"
+                        name="dataset_name"
+                        placeholder="Dataset name or topic"
+                        required
+                        class="form-input"
+                    />
+                    <input
+                        type="text"
+                        name="source"
+                        placeholder="Suggested source or URL"
+                        class="form-input"
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Your email (optional)"
+                        class="form-input"
+                    />
+                    <button type="submit" class="suggest-btn">Submit →</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

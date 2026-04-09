@@ -508,3 +508,210 @@ tbody td {
     .site-header nav { display: none; }
     .hero { padding: 2.5rem 0 2rem; }
 }
+
+/* ============================================
+   FILTERS
+   ============================================ */
+.filters {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 0;
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+}
+
+.filters .container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.filter-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+/* --- Filter Buttons --- */
+.filter-buttons {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.3rem 0.85rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.filter-btn.active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+}
+
+/* --- Country Dropdown --- */
+.filter-select {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    padding: 0.3rem 2rem 0.3rem 0.85rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6B6B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--green);
+}
+
+/* --- No Results --- */
+.no-results {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--muted);
+    font-size: 1rem;
+    font-family: var(--font-display);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .filters .container {
+        gap: 1rem;
+    }
+
+    .filter-group {
+        flex-wrap: wrap;
+    }
+}
+
+/* ============================================
+   SUGGEST A DATASET
+   ============================================ */
+.suggest {
+    background: var(--green);
+    padding: 4rem 0;
+    border-top: 3px solid var(--gold);
+}
+
+.suggest-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.suggest-text h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.4rem;
+}
+
+.suggest-text p {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+    font-weight: 300;
+}
+
+.suggest-form {
+    flex: 1;
+    min-width: 300px;
+}
+
+.form-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.form-input {
+    flex: 1;
+    min-width: 160px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-input::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.suggest-btn {
+    background: var(--gold);
+    color: var(--green);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+}
+
+.suggest-btn:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .suggest-inner {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-input, .suggest-btn {
+        width: 100%;
+    }
+}
