@@ -60,3 +60,30 @@ async def download_dataset(dataset_id: str, request: Request):
         media_type=media_type,
         filename=os.path.basename(file_path)
     )
+
+@router.get("/datasets/{dataset_id}/download/clean")
+async def download_clean(dataset_id: str, request: Request):
+    catalog = get_catalog(request)
+    dataset = next((d for d in catalog if d["id"] == dataset_id), None)
+    if not dataset:
+        raise HTTPException(status_code=404, detail="Dataset not found")
+    if not dataset["has_cleaned"]:
+        raise HTTPException(status_code=404, detail="No cleaned version available")
+
+    file_path = dataset["cleaned_path"]
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Cleaned file not found")
+
+    mime_types = {
+        "CSV": "text/csv",
+        "PARQUET": "application/octet-stream",
+        "JSONL": "application/jsonlines"
+    }
+    media_type = mime_types.get(dataset["file_type"], "application/octet-stream")
+    ext = dataset["file_type"].lower()
+
+    return FileResponse(
+        path=file_path,
+        media_type=media_type,
+        filename=f"{dataset_id}_cleaned.{ext}"
+    )

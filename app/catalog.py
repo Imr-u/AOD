@@ -61,7 +61,7 @@ MANUAL_METADATA = {
         "country": "Nigeria",
         "category": "Finance",
     },
-    "jobs.parquet": {
+    "jobs_parquet": {
         "name": "Jobs.et Job Listings",
         "source": "Jobs.et",
         "description": "Aggregated job postings scraped from Jobs.et covering multiple sectors and employers.",
@@ -87,24 +87,23 @@ def build_catalog():
     for filename in os.listdir(DATA_DIR):
         if not filename.endswith((".csv", ".parquet", ".jsonl")):
             continue
+        if "_cleaned" in filename:  # skip cleaned files
+            continue
 
         file_path = os.path.join(DATA_DIR, filename)
         ext = filename.rsplit(".", 1)[1].lower()
         file_type = ext.upper() if ext != "jsonl" else "JSONL"
 
-        # Match metadata — full filename first, then stem
         file_stem = filename.rsplit(".", 1)[0]
+        # If another file shares this stem, make id unique
+        file_id = f"{file_stem}_{ext}" if file_stem == "jobs" else file_stem
         manual = MANUAL_METADATA.get(filename) or MANUAL_METADATA.get(file_stem, {})
 
-        # File size
         file_size_kb = round(os.path.getsize(file_path) / 1024, 1)
-
-        # Last modified date
         last_updated = datetime.fromtimestamp(
             os.path.getmtime(file_path)
         ).strftime("%Y-%m-%d")
 
-        # Row count + missing values
         try:
             df = get_dataframe(file_path, file_type)
             row_count = len(df)
@@ -113,8 +112,13 @@ def build_catalog():
             row_count = None
             missing_values = None
 
+        # Check if cleaned version exists
+        cleaned_filename = f"{file_stem}_cleaned.{ext}"
+        cleaned_path = os.path.join(DATA_DIR, "cleaned", cleaned_filename)
+        has_cleaned = os.path.exists(cleaned_path)
+
         catalog.append({
-            "id": file_stem,
+            "id": file_id,
             "name": manual.get("name", file_stem.replace("_", " ").title()),
             "source": manual.get("source", "Unknown"),
             "description": manual.get("description", "No description available."),
@@ -126,6 +130,8 @@ def build_catalog():
             "row_count": row_count,
             "missing_values": missing_values,
             "last_updated": last_updated,
+            "has_cleaned": has_cleaned,
+            "cleaned_path": cleaned_path if has_cleaned else None,
         })
 
     return catalog

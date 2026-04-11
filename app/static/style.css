@@ -16,8 +16,8 @@
     --border:     #E2E0DA;
     --card-bg:    #FFFFFF;
 
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body:    'Source Sans 3', sans-serif;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body:    'DM Sans', sans-serif;
 
     --max-width: 1200px;
     --radius: 6px;
@@ -368,23 +368,50 @@ a { color: inherit; text-decoration: none; }
     color: #fff;
 }
 
-/* Download Button */
-.download-btn {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--green);
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    padding: 0.85rem 2rem;
-    border-radius: var(--radius);
-    transition: background 0.2s, transform 0.15s;
-    position: relative;
-    z-index: 1;
+/* --- Download Buttons --- */
+.download-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
 }
 
-.download-btn:hover {
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+}
+
+.download-btn.raw {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.download-btn.raw:hover {
+    border-color: #fff;
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+.download-btn.clean {
+    background: var(--gold);
+    color: var(--green);
+    border: 2px solid var(--gold);
+}
+
+.download-btn.clean:hover {
     background: var(--gold-light);
+    border-color: var(--gold-light);
     transform: translateY(-2px);
 }
 
@@ -714,4 +741,17 @@ tbody td {
     .form-input, .suggest-btn {
         width: 100%;
     }
+}
+
+.logo-img {
+    height: 36px;
+    width: auto;
+}
+
+.detail-hero {
+    background: var(--green);
+    padding: 3rem 0 5rem;
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 64px - 3px);
 }

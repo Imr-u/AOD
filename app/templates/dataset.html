@@ -29,9 +29,16 @@
                 <span class="meta-value">{{ dataset.last_updated }}</span>
             </div>
         </div>
-        <a href="/datasets/{{ dataset.id }}/download" class="download-btn">
-            ↓ Download {{ dataset.file_type }}
-        </a>
+        <div class="download-buttons">
+            <a href="/datasets/{{ dataset.id }}/download" class="download-btn raw">
+                ↓ Download Raw
+            </a>
+            {% if dataset.has_cleaned %}
+            <a href="/datasets/{{ dataset.id }}/download/clean" class="download-btn clean">
+                ✦ Download Cleaned
+            </a>
+            {% endif %}
+        </div>
     </div>
 </section>
 
