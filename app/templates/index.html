@@ -8,6 +8,10 @@
         <p class="hero-sub">Structured African data, free to download.</p>
         <span class="dataset-count" id="dataset-count">{{ datasets|length }} datasets available</span>
     </div>
+    <!-- Success Toast -->
+    <div class="toast" id="toast">
+        ✦ Dataset suggestion received — thank you!
+    </div>
 </section>
 
 <section class="filters">
@@ -161,5 +165,17 @@
         </div>
     </div>
 </section>
+
+<script>
+    // Show toast if redirected after form submission
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("suggested") === "true") {
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 4000);
+        // Clean URL without reloading
+        window.history.replaceState({}, "", "/");
+    }
+</script>
 
 {% endblock %}
